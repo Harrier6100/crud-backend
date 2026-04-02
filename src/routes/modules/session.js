@@ -5,12 +5,12 @@ const bcrypt = require('bcrypt');
 const dayjs = require('dayjs');
 const db = require('@/db');
 
-const COOKIE_OPTIONS = {
+const getCookieOptions = () => ({
     httpOnly: true,
     secure: false,
     sameSite: 'Strict',
     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
-};
+});
 
 const generateAccessToken = ({ id, name, role, permissions }) => {
     return jwt.sign(
@@ -47,7 +47,7 @@ router.post('/start', async (req, res, next) => {
         const accessToken = generateAccessToken(user);
         const refreshToken = generateRefreshToken(user);
 
-        res.cookie('refreshToken', refreshToken, COOKIE_OPTIONS);
+        res.cookie('refreshToken', refreshToken, getCookieOptions());
         res.status(200).json({ token: accessToken });
     } catch (err) {
         next(err);
@@ -74,7 +74,7 @@ router.post('/auto/start', async (req, res, next) => {
         const accessToken = generateAccessToken(user);
         const refreshToken = generateRefreshToken(user);
 
-        res.cookie('refreshToken', refreshToken, COOKIE_OPTIONS);
+        res.cookie('refreshToken', refreshToken, getCookieOptions());
         res.status(200).json({ token: accessToken });
     } catch (err) {
         next(err);
