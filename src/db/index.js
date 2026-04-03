@@ -3,7 +3,11 @@ const pgp = require('pg-promise')({
         if (!data.length) return;
         data.forEach((row, i) => {
             data[i] = Object.fromEntries(
-                Object.entries(row).map(([column, value]) => [pgp.utils.camelize(column), value])
+                // Object.entries(row).map(([column, value]) => [pgp.utils.camelize(column), value])
+                Object.entries(row).flatMap(([column, value]) => [
+                    [column, value],
+                    [pgp.utils.camelize(column), value]
+                ])
             );
         });
     }
